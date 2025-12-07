@@ -1,7 +1,7 @@
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import HttpBackend from 'i18next-http-backend'
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import HttpBackend from 'i18next-http-backend';
+import { initReactI18next } from 'react-i18next';
 
 i18n
 	.use(HttpBackend)
@@ -23,6 +23,6 @@ i18n
 		// You can specify namespaces if YOU want:
 		ns: ['app'],
 		defaultNS: 'app',
-	})
+	});
 
-export default i18n
+export default i18n;
