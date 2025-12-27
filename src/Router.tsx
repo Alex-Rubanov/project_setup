@@ -1,8 +1,10 @@
 import {
 	type AnchorHTMLAttributes,
 	type ComponentType,
+	createContext,
 	type ReactNode,
 	type SyntheticEvent,
+	useContext,
 	useEffect,
 	useState,
 } from 'react';
@@ -46,6 +48,11 @@ export const useRoute = () => {
 	return path;
 };
 
+const RouterContext = createContext<{
+	params?: Record<string, string>;
+	path: string;
+}>({ path: window.location.pathname });
+
 export const Router = (props: {
 	routes: Record<string, React.ComponentType>;
 }) => {
@@ -59,13 +66,33 @@ export const Router = (props: {
 			const Page: ComponentType<{ params?: Record<string, string> }> =
 				routes[route];
 
-			return <Page params={params} />;
+			return (
+				<RouterContext.Provider value={{ params, path }}>
+					<Page />
+				</RouterContext.Provider>
+			);
 		}
 	}
 
 	const NotFound = routes['*'];
 
-	return <NotFound />;
+	return (
+		<RouterContext.Provider value={{ path }}>
+			<NotFound />
+		</RouterContext.Provider>
+	);
+};
+
+export const useParams = <
+	T extends Record<string, string> = Record<string, string>,
+>() => {
+	const { params } = useContext(RouterContext);
+
+	if (!params) {
+		throw new Error('useParams must be used within a Router');
+	}
+
+	return params as T;
 };
 
 type RouterLinkProps = {
