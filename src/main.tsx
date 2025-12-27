@@ -4,8 +4,14 @@ import './i18n';
 import './index.css';
 import App from '@/App';
 
-createRoot(document.getElementById('root')!).render(
-	<StrictMode>
-		<App />
-	</StrictMode>,
-);
+const container = document.getElementById('root');
+
+if (container) {
+	createRoot(container).render(
+		<StrictMode>
+			<App />
+		</StrictMode>,
+	);
+} else {
+	throw new Error('Root container missing in index.html');
+}

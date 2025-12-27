@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import viteLogo from '/vite.svg';
+import { ENVIRONMENT } from '../shared/utils';
 import reactLogo from './assets/react.svg';
 import './App.css';
 
@@ -12,6 +13,8 @@ function App() {
 	const changeLanguage = (lng: 'en' | 'fr') => {
 		i18n.changeLanguage(lng);
 	};
+
+	console.log(import.meta.env[ENVIRONMENT.CURRENCY_API_KEY]);
 
 	return (
 		<>
