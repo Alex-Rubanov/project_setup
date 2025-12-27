@@ -1,4 +1,11 @@
-import { type SyntheticEvent, useEffect, useState } from 'react';
+import {
+	type AnchorHTMLAttributes,
+	type ComponentType,
+	type ReactNode,
+	type SyntheticEvent,
+	useEffect,
+	useState,
+} from 'react';
 
 const matchPath = (path: string, route: string) => {
 	const pathParts = path.split('/').filter(Boolean);
@@ -45,17 +52,28 @@ export const Router = (props: {
 	const { routes } = props;
 	const path = useRoute();
 
-	const Page = routes[path] ?? routes['*'];
+	for (const route in routes) {
+		const params = matchPath(path, route);
 
-	return <Page />;
+		if (params) {
+			const Page: ComponentType<{ params?: Record<string, string> }> =
+				routes[route];
+
+			return <Page params={params} />;
+		}
+	}
+
+	const NotFound = routes['*'];
+
+	return <NotFound />;
 };
 
-export const RouterLink = (
-	props: {
-		to: string;
-		children: React.ReactNode;
-	} & React.AnchorHTMLAttributes<HTMLAnchorElement>,
-) => {
+type RouterLinkProps = {
+	to: string;
+	children: ReactNode;
+} & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>;
+
+export const RouterLink = (props: RouterLinkProps) => {
 	const { to, children, ...rest } = props;
 
 	const handleClick = (event: SyntheticEvent) => {
